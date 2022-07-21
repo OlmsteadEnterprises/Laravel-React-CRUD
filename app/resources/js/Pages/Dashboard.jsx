@@ -1,8 +1,23 @@
-import React from "react";
+import React, { useState, Component, useEffect } from "react";
 import Authenticated from "@/Layouts/Authenticated";
 import { Head } from "@inertiajs/inertia-react";
+import axios from "axios";
 
 export default function Dashboard(props) {
+    const [posts, setPosts] = useState([]);
+
+    const fetchPosts = () => {
+        axios
+            .get("/api/posts")
+            .then((response) => {
+                setPosts(response.data);
+            })
+            .catch(() => {});
+    };
+
+    useEffect(() => {
+        fetchPosts();
+    }, []);
     return (
         <Authenticated
             auth={props.auth}
@@ -20,55 +35,30 @@ export default function Dashboard(props) {
                     <div className="bg-white overflow-hidden shadow-sm sm:rounded-lg">
                         <div className="overflow-hidden overflow-x-auto p-6 bg-white border-gray-200">
                             <div className="min-w-full align-middle">
-                                <table class="border-collapse table-auto w-full text-sm">
+                                <table className="border-collapse table-auto w-full text-sm">
                                     <thead>
                                         <tr>
-                                            <th class="border-b dark:border-slate-600 font-medium p-4 pl-8 pt-0 pb-3 text-slate-400 dark:text-slate-200 text-left">
-                                                Song
+                                            <th className="border-b dark:border-slate-600 font-medium p-4 pl-8 pt-0 pb-3 text-slate-400 dark:text-slate-200 text-left">
+                                                Id
                                             </th>
-                                            <th class="border-b dark:border-slate-600 font-medium p-4 pt-0 pb-3 text-slate-400 dark:text-slate-200 text-left">
-                                                Artist
+                                            <th className="border-b dark:border-slate-600 font-medium p-4 pt-0 pb-3 text-slate-400 dark:text-slate-200 text-left">
+                                                Title
                                             </th>
-                                            <th class="border-b dark:border-slate-600 font-medium p-4 pr-8 pt-0 pb-3 text-slate-400 dark:text-slate-200 text-left">
-                                                Year
+                                            <th className="border-b dark:border-slate-600 font-medium p-4 pr-8 pt-0 pb-3 text-slate-400 dark:text-slate-200 text-left">
+                                                Content
                                             </th>
                                         </tr>
                                     </thead>
-                                    <tbody class="bg-white dark:bg-slate-800">
-                                        <tr>
-                                            <td class="border-b border-slate-100 dark:border-slate-700 p-4 pl-8 text-slate-500 dark:text-slate-400">
-                                                The Sliding Mr. Bones (Next
-                                                Stop, Pottersville)
-                                            </td>
-                                            <td class="border-b border-slate-100 dark:border-slate-700 p-4 text-slate-500 dark:text-slate-400">
-                                                Malcolm Lockyer
-                                            </td>
-                                            <td class="border-b border-slate-100 dark:border-slate-700 p-4 pr-8 text-slate-500 dark:text-slate-400">
-                                                1961
-                                            </td>
-                                        </tr>
-                                        <tr>
-                                            <td class="border-b border-slate-100 dark:border-slate-700 p-4 pl-8 text-slate-500 dark:text-slate-400">
-                                                Witchy Woman
-                                            </td>
-                                            <td class="border-b border-slate-100 dark:border-slate-700 p-4 text-slate-500 dark:text-slate-400">
-                                                The Eagles
-                                            </td>
-                                            <td class="border-b border-slate-100 dark:border-slate-700 p-4 pr-8 text-slate-500 dark:text-slate-400">
-                                                1972
-                                            </td>
-                                        </tr>
-                                        <tr>
-                                            <td class="border-b border-slate-200 dark:border-slate-600 p-4 pl-8 text-slate-500 dark:text-slate-400">
-                                                Shining Star
-                                            </td>
-                                            <td class="border-b border-slate-200 dark:border-slate-600 p-4 text-slate-500 dark:text-slate-400">
-                                                Earth, Wind, and Fire
-                                            </td>
-                                            <td class="border-b border-slate-200 dark:border-slate-600 p-4 pr-8 text-slate-500 dark:text-slate-400">
-                                                1975
-                                            </td>
-                                        </tr>
+                                    <tbody className="bg-white dark:bg-slate-800">
+                                        {posts.map((post) => {
+                                            return (
+                                                <tr>
+                                                    <td>{post.id}</td>
+                                                    <td>{post.title}</td>
+                                                    <td>{post.content}</td>
+                                                </tr>
+                                            );
+                                        })}
                                     </tbody>
                                 </table>
                             </div>
